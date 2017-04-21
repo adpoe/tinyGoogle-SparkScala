@@ -48,8 +48,10 @@ Array((Filename,0,Array(the, project, gutenberg, ebook, of, dubliners, by, james
 
 
 // and do one more map to get: (fname, idx, word)
+
+case class WordCount(title: String, count: Long, word: String)
 var wordsAndLabels = splitWords.flatMap {
-  case(fname, idx, wordList) => wordList.map{ w => (fname, idx, w) }
+  case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
 }
 /*res31: Array[(String, Long, String)] = Array((Filename,0,the),
 (Filename,0,project), (Filename,0,gutenberg), (Filename,0,ebook), (Filename,0,of),
@@ -65,11 +67,10 @@ var wordsAndLabels = splitWords.flatMap {
 
 // then
 // (word (fname, [idxs]))
-
-case class WordCount(title: String, count: Long, word: String)
-var wordsAndLabelsWC = splitWords.map {
-  case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
-}
+//
+//var wordsAndLabelsWC = splitWords.map {
+//  case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
+//}
 //wordsAndLabels.map{ case(title, count, word) => WordCount(title, count, word) }
 /* transform to a dataframe */
 // not quite right yet.  it's putting everything one column.
@@ -77,6 +78,49 @@ var wordsAndLabelsWC = splitWords.map {
 //   for an individual book. still need to read whole directory, one by one...
 val df = wordsAndLabels.toDF()
 df.head()
+df.show()
+
+
+// groupby word and count
+scala> val grouped = df.groupBy('title, 'word).count()
+/*
+scala> grouped.show()
+[Stage 13:>
++--------+----------+-----+
+|   title|      word|count|
++--------+----------+-----+
+|Filename| dubliners|    7|
+|Filename|     hands|   50|
+|Filename| stratagem|    1|
+|Filename|    odours|    1|
+|Filename|     treat|    4|
+|Filename|  straight|    7|
+|Filename|     notes|   10|
+*/
+
+// sort by most occurrences
+rouped.sort('count.desc).show()
+/*+--------+----+-----+
+|   title|word|count|
++--------+----+-----+
+|Filename| the| 4236|
+|Filename|    | 2850|
+|Filename| and| 2304|
+|Filename|  of| 1986|
+|Filename|  to| 1833|
+|Filename|  he| 1714|
+|Filename|   a| 1644|
+|Filename| was| 1161|
+|Filename| his| 1159|
+|Filename|  in| 1112|
+|Filename| had|  811|
+|Filename| her|  793|
+|Filename|   i|  784|
+|Filename|said|  755|*/
+
+/////////////////////////////////////////////
+///// NEXT --> BUILD DF for all books ///////
+/////////////////////////////////////////////
 
 // Q:  Df.concat?
 // Q:  How to make a function to pass to EACH file in DIR?
