@@ -36,7 +36,7 @@ Array((Filename,0,The Project Gutenberg EBook of Dubliners, by James Joyce),
 (Filename,5,eBook or online at www.gutenberg.org) */
 
 // map lowercase and split over each line
-words = input.flatMap(x => x.split("\\W+"))
+//words = input.flatMap(x => x.split("\\W+"))
 
 // this does it
 var splitWords = nameAndLine.map {
@@ -49,7 +49,7 @@ Array((Filename,0,Array(the, project, gutenberg, ebook, of, dubliners, by, james
 
 // and do one more map to get: (fname, idx, word)
 
-case class WordCount(title: String, count: Long, word: String)
+case class WordCount(title: String, lineNum: Long, word: String)
 var wordsAndLabels = splitWords.flatMap {
   case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
 }
@@ -99,7 +99,7 @@ scala> grouped.show()
 */
 
 // sort by most occurrences
-rouped.sort('count.desc).show()
+grouped.sort('count.desc).show()
 /*+--------+----+-----+
 |   title|word|count|
 +--------+----+-----+
@@ -118,6 +118,26 @@ rouped.sort('count.desc).show()
 |Filename|   i|  784|
 |Filename|said|  755|*/
 
+
+// get the word list
+df.filter(df("word") === "dubliners").show()
+// okay ... so this lets us find the lineNums without a separate inverted index
+// can cache these or even save as JSON to save the data for later re-use....
+/*+--------+-------+---------+
+|   title|lineNum|     word|
++--------+-------+---------+
+|Filename|      0|dubliners|
+|Filename|      8|dubliners|
+|Filename|     19|dubliners|
+|Filename|     27|dubliners|
+|Filename|     68|dubliners|
+|Filename|   7827|dubliners|
+|Filename|   7829|dubliners|
++--------+-------+---------+
+*/
+
+
+
 /////////////////////////////////////////////
 ///// NEXT --> BUILD DF for all books ///////
 /////////////////////////////////////////////
@@ -128,8 +148,26 @@ rouped.sort('count.desc).show()
 
 /* fget list of files in a certain directory */
 // http://stackoverflow.com/questions/7425558/get-only-the-file-names-using-listfiles-in-scala
-val files = getListOfFiles("/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books")
+//val files = getListOfFiles("/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books")
+import java.io._
 val dir = "/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books"
 val files = new File(dir).list
 // idea --> start here, and then go into the directory and look for that books
 // place its name in the first val of a tuple, every time
+
+/* get all files and concat into a DataFrame */
+var accumulator = sc.parallelize(Array(WordCount("N/A", -1, "starter_df"))).toDF()
+
+for (f <- files) {
+  println(s"Filename is: $f")
+  var path = dir + "/" + f
+  println(s"Path to read is: $path")
+
+  // function to read data in here, replacing my filename placeholder
+  // with the actual filename
+
+  // concat the dataframes
+  var intermediate  = accumulator.union(df)
+  accumultor = intermediate
+
+}
