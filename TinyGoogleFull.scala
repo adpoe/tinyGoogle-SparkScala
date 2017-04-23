@@ -95,7 +95,24 @@ object TinyGoogleFull {
       var intermediateGrp = accumulatorGrouped.union(grouped)
       accumulatorGrouped = intermediateGrp
     }
+    
+    // ensure data frames have correct format
     accumulator.show()
     accumulatorGrouped.show()
+    
+    /* try some queries */
+    // find line numbers for a give word 'hello', all books
+    accumulator.filter(accumulator("word") === "hello").show()
+    
+    // find top wordcounts in dubliners
+    accumulatorGrouped.filter(accumulatorGrouped("title") === "DublinersbyJamesJoyce.txt").sort('count.desc).show()
+    
+    // save our result in JSON format, can read it in again alter
+    accumulator.write.json("lineNumberIndex.json")
+    accumulatorGrouped.write.json("wordCountsIndex.json")
+    
+    
+    
   }
 }
+
