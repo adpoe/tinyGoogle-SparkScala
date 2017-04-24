@@ -12,7 +12,7 @@ object TinyGoogleFull {
 
   // class to use for counting words and storing in DataFrame
  case class WordCount(title: String, lineNum: Long, word: String)
- 
+
 /** Our main function where the action happens */
   def main(args: Array[String]) {
     //val dir = args(0) : String
@@ -27,7 +27,7 @@ object TinyGoogleFull {
       .appName("SparkSQL")
       .master("local[*]")
       .getOrCreate()
-    
+
     val sc = spark.sparkContext//new SparkContext("local[*]", "TinyGoogle")
     // Convert our csv file to a DataSet, using our case
     // class to infer the schema.
@@ -41,7 +41,7 @@ object TinyGoogleFull {
     val files = new File(dir).list
     // idea --> start here, and then go into the directory and look for that books
     // place its name in the first val of a tuple, every time
-    
+
     /* get all files and concat into a DataFrame */
     val starter = sc.parallelize((Array(WordCount("N/A", -1, "starter_df"))))
     var accumulator = starter.toDF()
@@ -57,31 +57,32 @@ object TinyGoogleFull {
       /***************************
        * Core code to parse data
        * *************************/
-      val book = "/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books/DublinersbyJamesJoyce.txt"
+      //var book = "/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books/DublinersbyJamesJoyce.txt"
 
-      val lines = spark.sparkContext.textFile(book)
-          // number each index
-      val enumerated = lines.zipWithIndex.map{ case (e, i) => (i,e) }
+      var lines = spark.sparkContext.textFile(path)
+
+      // number each index
+      var enumerated = lines.zipWithIndex.map{ case (e, i) => (i,e) }
 
       // map the file name over each
-      val bookTitle = f : String
-      val nameAndLine = enumerated.map { case (idx, line) => (bookTitle, idx, line) }
+      var bookTitle = f : String
+      var nameAndLine = enumerated.map { case (idx, line) => (bookTitle, idx, line) }
 
       // map lowercase and split over each line
-      val splitWords = nameAndLine.map {
+      var splitWords = nameAndLine.map {
         case(fname, idx, line) => (fname, idx, line.toLowerCase().split("\\W+"))
       }
 
       // and do one more map to get: (fname, idx, word)
-      val wordsAndLabels = splitWords.flatMap {
+      var wordsAndLabels = splitWords.flatMap {
         case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
       }
 
       // transform into a DataFrame
-      val df = wordsAndLabels.toDF()
+      var df = wordsAndLabels.toDF()
 
       // groupby word and count
-      val grouped = df.groupBy('title, 'word).count()
+      var grouped = df.groupBy('title, 'word).count()
 
       /****************
        * End Parse file
@@ -95,24 +96,27 @@ object TinyGoogleFull {
       var intermediateGrp = accumulatorGrouped.union(grouped)
       accumulatorGrouped = intermediateGrp
     }
-    
+
     // ensure data frames have correct format
     accumulator.show()
     accumulatorGrouped.show()
-    
+
     /* try some queries */
     // find line numbers for a give word 'hello', all books
     accumulator.filter(accumulator("word") === "hello").show()
-    
+    accumulator.filter(accumulator("word") === "test").show()
+
     // find top wordcounts in dubliners
     accumulatorGrouped.filter(accumulatorGrouped("title") === "DublinersbyJamesJoyce.txt").sort('count.desc).show()
-    
+    accumulatorGrouped.filter(accumulatorGrouped("title") === "BeowulfbyJLesslieHall.txt").sort('count.desc).show()
+
+
+    // example for and
+    accumulator.filter(accumulator("word") === "that" && accumulator("title") === "BeowulfbyJLesslieHall.txt").show()
     // save our result in JSON format, can read it in again alter
-    accumulator.write.json("lineNumberIndex.json")
-    accumulatorGrouped.write.json("wordCountsIndex.json")
-    
-    
-    
+    //accumulator.write.json("lineNumberIndex.json")
+    //accumulatorGrouped.write.json("wordCountsIndex.json")
+
+
   }
 }
-
