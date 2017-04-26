@@ -1,0 +1,103 @@
+===================================
+SEARCH TERM-->'wondered'
+===================================
+RESULT 1 for search term --> 'wondered' :
+TITLE : DublinersbyJamesJoyce.txt		>>Word Occurences : 12<<
+
+Context :
+
+my soul receding into some pleasant and vicious region; and there again
+
+I found it waiting for me. It began to confess to me in a murmuring
+
+>>voice and I wondered why it smiled continually and why the lips were so
+
+moist with spittle. But then I remembered that it had died of paralysis
+
+and I felt that I too was smiling feebly as if to absolve the simoniac
+
+------------------------------------
+RESULT 2 for search term --> 'wondered' :
+TITLE : TheAdventuresOfTomSawyerByMarkTwain.txt		>>Word Occurences : 12<<
+
+Context :
+
+knitting--for she had no company but the cat, and it was asleep in her
+
+lap. Her spectacles were propped up on her gray head for safety. She had
+
+>>thought that of course Tom had deserted long ago, and she wondered at
+
+seeing him place himself in her power again in this intrepid way. He
+
+said: Maynt I go and play now, aunt?
+
+------------------------------------
+RESULT 3 for search term --> 'wondered' :
+TITLE : PrideandPrejudicebyJaneAusten.txt		>>Word Occurences : 8<<
+
+Context :
+
+
+
+They were not welcomed home very cordially by their mother. Mrs. Bennet
+
+>>wondered at their coming, and thought them very wrong to give so much
+
+trouble, and was sure Jane would have caught cold again. But their
+
+father, though very laconic in his expressions of pleasure, was really
+
+------------------------------------
+
+===================================
+SEARCH TERM-->'uneasily'
+===================================
+RESULT 1 for search term --> 'uneasily' :
+TITLE : PeterPanbyJMBarrie.txt		>>Word Occurences : 3<<
+
+Context :
+
+
+
+No nursery could possibly have been conducted more correctly, and
+
+>>Mr. Darling knew it, yet he sometimes wondered uneasily whether the
+
+neighbours talked.
+
+
+
+------------------------------------
+RESULT 2 for search term --> 'uneasily' :
+TITLE : AliceAdventuresinWonderlandbyLewisCarroll.txt		>>Word Occurences : 2<<
+
+Context :
+
+The Hatter was the first to break the silence. ‘What day of the month
+
+is it?’ he said, turning to Alice: he had taken his watch out of his
+
+>>pocket, and was looking at it uneasily, shaking it every now and then,
+
+and holding it to his ear.
+
+
+
+------------------------------------
+RESULT 3 for search term --> 'uneasily' :
+TITLE : LesMiserablesbyVictorHugo.txt		>>Word Occurences : 2<<
+
+Context :
+
+appetites, hunger in search of prey, the armed instincts of nails
+
+and jaws which have for source and aim the belly, glare and smell out
+
+>>uneasily the impassive spectral forms straying beneath a shroud, erect
+
+in its vague and shuddering robe, and which seem to them to live with
+
+a dead and terrible life. These brutalities, which are only matter,
+
+------------------------------------
