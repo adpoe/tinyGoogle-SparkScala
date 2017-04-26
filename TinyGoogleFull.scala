@@ -1,4 +1,4 @@
-package com.sundogsoftware.spark
+package com.you.package.spark
 
 import org.apache.spark._
 import org.apache.spark.SparkContext._
@@ -16,15 +16,12 @@ object TinyGoogleFull {
   // class to use for counting words and storing in DataFrame
  case class WordCount(title: String, lineNum: Long, word: String)
 
-/** Our main function where the action happens */
+
   def main(args: Array[String]) {
-
-
-
-        // Set the log level to only print errors
+        // Logger should only print ERROR level or higher
         Logger.getLogger("org").setLevel(Level.ERROR)
 
-        // Use new SparkSession interface in Spark 2.0
+        // Use SparkSession interface (must have Spark 2.0+)
         val spark = SparkSession
           .builder
           .appName("SparkSQL")
@@ -32,12 +29,9 @@ object TinyGoogleFull {
           .getOrCreate()
 
         val sc = spark.sparkContext//new SparkContext("local[*]", "TinyGoogle")
-        // Convert our csv file to a DataSet, using our case
-        // class to infer the schema.
         import spark.implicits._
 
-
-
+        // handle command line input
         try{
                   // -i --> created the inverted index
                   // -s --> search for given search term
@@ -46,15 +40,8 @@ object TinyGoogleFull {
                   //get the directory of files from command line args
                   var dir = args(1) : String
                   if(command == "-i"){
-                        /* fget list of files in a certain directory */
-                        // http://stackoverflow.com/questions/7425558/get-only-the-file-names-using-listfliles-in-scala
-                        //val files = getListOfFiles("/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books")
-
-                        //val dir = "/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books"
                         val files = new File(dir).list
                         var num_of_files = files.length
-                        // idea --> start here, and then go into the directory and look for that books
-                        // place its name in the first val of a tuple, every time
 
                         /* get all files and concat into a DataFrame */
                         val starter = sc.parallelize((Array(WordCount("N/A", -1, "starter_df"))))
@@ -65,13 +52,9 @@ object TinyGoogleFull {
                           var path = dir + "/" + f
                           println(s"Path to read is: $path")
 
-                          // function to read data in here, replacing my filename placeholder
-                          // with the actual filename
-
                           /***************************
                            * Core code to parse data
                            * *************************/
-                          //var book = "/Users/tony/Documents/_LEARNINGS/CLOUD/_spark_tinyGoogle/books/DublinersbyJamesJoyce.txt"
 
                           var lines = spark.sparkContext.textFile(path)
 
@@ -87,7 +70,7 @@ object TinyGoogleFull {
                             case(fname, idx, line) => (fname, idx, line.toLowerCase().split("\\W+"))
                           }
 
-                          // and do one more map to get: (fname, idx, word)
+                          // and do one more FlatMap to get: WordCount(fname, idx, word)
                           var wordsAndLabels = splitWords.flatMap {
                             case(fname, idx, wordList) => wordList.map{ w => WordCount(fname, idx, w) }
                           }
@@ -102,18 +85,14 @@ object TinyGoogleFull {
                            * End Parse file
                            ****************/
 
-
                           // concat the dataframes
                           var intermediate  = accumulator.union(df)
                           accumulator = intermediate
 
                         }
 
-
-
                         //save inverted_index
                         accumulator.write.json("inverted_index")
-
 
 
               }//end if -i statement
@@ -138,13 +117,8 @@ object TinyGoogleFull {
 
                         // query the line number for the word in each file
                         val temp_data_line = accumulator.filter(accumulator("word") === word).groupBy('title,'word).min()
-                        var temp_freq = word + " : " + temp_data_line.count().toString()
-
-                        // save the doc frequency for this word
-
 
                         for(rec <- temp_data_count){
-
                           // filter to get the line number for the specific file
                           var line_num = temp_data_line.filter(temp_data_line("title")===rec(0))
 
@@ -208,18 +182,17 @@ object TinyGoogleFull {
 
                           var context = lines drop((temp_list(3).toInt))
                           // print the context
-                            println("Context : \n\n" + ">>" + context.next())
-                            println("\n" + context.next())
-                            println("\n" + context.next())
-                            println("\n------------------------------------")
+                          println("Context : \n\n" + ">>" + context.next())
+                          println("\n" + context.next())
+                          println("\n" + context.next())
+                          println("\n------------------------------------")
                         }
 
 
 
 
                         res+=1
-
-                        // little weird bad programming style
+                        // Stop after 3 iterations. We are only showing Top 3.
                         if(res==4){
                           res = 1
                         }
