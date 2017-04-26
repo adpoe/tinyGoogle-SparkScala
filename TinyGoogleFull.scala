@@ -7,6 +7,9 @@ import org.apache.log4j._
 import java.io._
 import scala.collection.mutable.ListBuffer
 import scala.io._
+import java.nio.charset.CodingErrorAction
+
+
 
 object TinyGoogleFull {
 
@@ -177,20 +180,42 @@ object TinyGoogleFull {
                         println("\t\t>>Word Occurences : " + temp_list(2) + "<<\n")
 
                         // find the context for the word in the book
-                        val lines = scala.io.Source.fromFile("/Users/Andraws/Desktop/spring_2017/cloud_computing/Project/tiny-Google/books/"+temp_list(1)).getLines
+                        val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+                        val lines = scala.io.Source.fromFile(dir+temp_list(1))(decoder).getLines
 
                         // get the lines from the book
-                        var context = lines drop((temp_list(3).toInt)-2)
+                        if((temp_list(3).toInt)>=2){
+                          var context = lines drop((temp_list(3).toInt)-2)
+                            // print the context
+                            println("Context : \n\n" + context.next())
+                            println("\n" + context.next())
+                            println("\n>>" + context.next())
+                            println("\n" + context.next())
+                            println("\n" + context.next())
+                            println("\n------------------------------------")
+                        }
+                        else if(temp_list(3).toInt==1){
+
+                          var context = lines drop((temp_list(3).toInt)-1)
+                          // print the context
+                            println("Context : \n\n" + context.next())
+                            println("\n>>" + context.next())
+                            println("\n" + context.next())
+                            println("\n" + context.next())
+                            println("\n------------------------------------")
+                        }
+                        else if(temp_list(3).toInt==0){
+
+                          var context = lines drop((temp_list(3).toInt))
+                          // print the context
+                            println("Context : \n\n" + ">>" + context.next())
+                            println("\n" + context.next())
+                            println("\n" + context.next())
+                            println("\n------------------------------------")
+                        }
 
 
 
-                        // print the context
-                        println("Context : \n\n" + context.next())
-                        println("\n" + context.next())
-                        println("\n>>" + context.next())
-                        println("\n" + context.next())
-                        println("\n" + context.next())
-                        println("\n------------------------------------")
 
                         res+=1
 
