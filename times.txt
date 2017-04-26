@@ -1,0 +1,20 @@
+
+tinyGoogle Python :
+
+      inverted-index = 35.6
+
+      search term : bingley = 36.37
+
+      search term : wondered uneasily = 37.47
+
+      search term : wherefore art thou romeo = 39.61
+
+tinyGoogle Scala :
+
+      inverted-index = 14.47
+
+      search term : bingley = 19.60
+
+      search term : wondered uneasily = 33.17
+
+      search term : wherefore art thou romeo = 53.93
